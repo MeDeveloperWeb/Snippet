@@ -3,13 +3,15 @@
 import { Input, PasswordInput } from '@/ui/Form';
 import { apiPath } from '../Auth';
 import { useContext } from 'react';
-import { redirect, useSearchParams } from 'next/navigation';
+import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { AuthContext } from '../AuthContext';
 
 export default function Login() {
   const [user, setUser] = useContext(AuthContext);
-  const query = useSearchParams().get('q') || '';
+  // const query = useSearchParams().get('q') || '';
+
+  const query = '';
 
   if (user.access) {
     redirect(`/${query}`);
