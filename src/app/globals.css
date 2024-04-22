@@ -8,13 +8,31 @@
   --background-end-rgb: 255, 255, 255;
 }
 
-@media (prefers-color-scheme: dark) {
+.dark:root {
+  --foreground-rgb: 255, 255, 255;
+  --background-start-rgb: 0, 0, 0;
+  --background-end-rgb: 0, 0, 0;
+}
+
+.dark * {
+  @apply shadow-slate-400/60;
+}
+
+.card {
+  @apply border-solid border-2 rounded shadow-lg dark:shadow-slate-200 dark:shadow-sm dark:border-slate-800;
+}
+
+hr {
+  @apply border-black dark:border-white shadow-sm;
+}
+
+/* @media (prefers-color-scheme: dark) {
   :root {
     --foreground-rgb: 255, 255, 255;
     --background-start-rgb: 0, 0, 0;
     --background-end-rgb: 0, 0, 0;
   }
-}
+} */
 
 body {
   color: rgb(var(--foreground-rgb));
