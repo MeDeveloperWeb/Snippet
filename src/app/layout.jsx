@@ -11,6 +11,8 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
+  // waking the server up
+  fetch(process.env.CODE_EXECUTION_URL + '/list');
   return (
     <html suppressHydrationWarning lang="en">
       <body className={inter.className}>
