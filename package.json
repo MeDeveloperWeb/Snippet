@@ -14,7 +14,8 @@
     "next-themes": "^0.3.0",
     "qs": "^6.12.1",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "socket.io-client": "4.7.5"
   },
   "devDependencies": {
     "eslint": "^8",

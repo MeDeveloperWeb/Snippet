@@ -1,6 +1,7 @@
 import { EditSvg, PlaySvg, SaveSvg } from '@/assets/icons';
 import supportedLanguages from './data/languages';
 import { runCode } from './Terminal';
+import languages from '@/app/execute/languageToExt';
 
 export default function SnippetHeader({
   snippet,
@@ -29,8 +30,11 @@ export default function SnippetHeader({
       </button>
       <button
         className="px-2 rounded-lg bg-blue-500 text-white flex gap-2"
-        onClick={async () =>
-          await runCode(snippet.files[0].content, snippet.files[0].language)
+        onClick={() =>
+          runCode(
+            snippet.files[0].content,
+            languages[snippet.files[0].language]
+          )
         }
       >
         <PlaySvg className="h-4 w-4 self-center" />
