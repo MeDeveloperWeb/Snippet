@@ -1,13 +1,15 @@
 'use client';
 
-import { connect } from 'socket.io-client';
+import { io } from 'socket.io-client';
 
-export const socket = connect(process.env.NEXT_PUBLIC_CODE_SOCKET);
+export const socket = io(process.env.NEXT_PUBLIC_CODE_SOCKET, {
+  autoConnect: false
+});
 
-export const sendInput = (data) => {
+export function sendInput(data) {
   if (!socket || !socket.connected) {
     return 'Something Went Wrong!!';
   }
 
   if (data) socket.emit('input', data);
-};
+}

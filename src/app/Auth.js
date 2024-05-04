@@ -10,7 +10,8 @@ export async function getUserAuthDetails() {
     if (!response.ok)
       return {
         access: null,
-        username: null
+        username: null,
+        id: null
       };
 
     const result = await response.json();
@@ -20,7 +21,8 @@ export async function getUserAuthDetails() {
     console.log(err);
     return {
       access: null,
-      username: null
+      username: null,
+      id: null
     };
   }
 }

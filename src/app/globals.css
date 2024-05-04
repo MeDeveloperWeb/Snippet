@@ -26,6 +26,31 @@ hr {
   @apply border-black dark:border-white shadow-sm;
 }
 
+.terminal-scroll {
+  &::-webkit-scrollbar {
+    @apply bg-transparent w-2;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    @apply rounded-lg bg-gray-400 dark:bg-gray-300 scroll-smooth;
+
+    &::focus,
+    &::hover {
+      @apply bg-orange-500;
+    }
+  }
+}
+
+@layer base {
+  .font-outline {
+    text-shadow:
+      1px 1px 2px black,
+      0 0 1em black,
+      0 0 0.2em black;
+    color: white;
+  }
+}
+
 /* @media (prefers-color-scheme: dark) {
   :root {
     --foreground-rgb: 255, 255, 255;

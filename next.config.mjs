@@ -7,7 +7,7 @@ const nextConfig = {
       {
         protocol: 'https',
         // add used host
-        hostname: 'st3.depositphotos.com',
+        hostname: 'api.multiavatar.com',
         port: '',
         pathname: '/**'
       }

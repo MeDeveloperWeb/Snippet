@@ -1,4 +1,4 @@
-import FileHeader from './FileHeader';
+import { FileHeader } from './headerButtons/button';
 
 export default function TabSwitcher({
   terminalView,
@@ -13,7 +13,7 @@ export default function TabSwitcher({
     <div
       className={`${files.length === 1 ? 'lg:hidden' : ''} col-span-2 flex w-[98%] lg:w-full`}
     >
-      <div className="flex-1 space-x-2 ">
+      <div className="flex flex-1 space-x-[1px]">
         {files.map((file, index) => (
           <FileHeader
             key={file.language}
@@ -23,12 +23,11 @@ export default function TabSwitcher({
               setTerminalView(false);
             }}
             disabled={fileIndex === index && !(webView || terminalView)}
-          >
-            {file.language}
-          </FileHeader>
+            text={file.language}
+          />
         ))}
       </div>
-      <div className="flex-1 text-right lg:text-left space-x-2">
+      <div className="flex flex-1 justify-end lg:justify-start lg:ml-4">
         {(files.length === 3 ? ['Console', 'Preview'] : ['Terminal']).map(
           (value) => (
             <FileHeader
@@ -39,9 +38,8 @@ export default function TabSwitcher({
                   : (setTerminalView(true), setWebView(false))
               }
               disabled={value === 'Preview' ? webView : terminalView}
-            >
-              {value}
-            </FileHeader>
+              text={value}
+            />
           )
         )}
       </div>

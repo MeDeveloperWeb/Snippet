@@ -2,7 +2,7 @@ import { Editor } from '@monaco-editor/react';
 import { useTheme } from 'next-themes';
 import loading from '@/assets/loading.gif';
 import Image from 'next/image';
-import { useRef } from 'react';
+import { handleSaveButton } from './SnippetHeader';
 
 export default function CodeEditor({
   snippet,
@@ -13,7 +13,15 @@ export default function CodeEditor({
   const { theme } = useTheme();
 
   return (
-    <div className={`w-full ${isVisible ? 'block' : 'hidden'} lg:block`}>
+    <div
+      className={`w-full ${isVisible ? 'block' : 'hidden'} lg:block`}
+      onKeyDown={(e) => {
+        if (e.ctrlKey && e.key === 's') {
+          e.preventDefault();
+          handleSaveButton();
+        }
+      }}
+    >
       <Editor
         height="80vh"
         language={snippet.files[fileIndex].language}
@@ -27,15 +35,7 @@ export default function CodeEditor({
           })
         }
         theme={theme === 'light' ? 'light' : 'vs-dark'}
-        loading={
-          snippet.files[fileIndex].content ? (
-            <pre>
-              <code>{snippet.files[fileIndex].content}</code>
-            </pre>
-          ) : (
-            <Image src={loading} alt="Loading" />
-          )
-        }
+        loading={<Image src={loading} alt="Loading" />}
         path={fileIndex}
       />
     </div>

@@ -42,21 +42,23 @@ export function ThemeLoader(props) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      id="b"
-      width={24}
-      height={24}
-      fill="none"
+      fill="currentColor"
       stroke="currentColor"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth={2}
-      viewBox="0 0 48 48"
+      height={24}
+      width={24}
+      viewBox="0 0 24 24"
       {...props}
     >
-      <g id="SVGRepo_iconCarrier">
+      <g
+        style={{
+          '--darkreader-inline-stroke': 'none'
+        }}
+      >
         <path
-          d="M41.4 26.829a3.618 3.618 0 0 0 .699-4.143c-1.356-2.794-3.577-6.44-6.936-9.857a33.503 33.503 0 0 0-9.932-7.004c-1.366-.632-2.98-.32-4.045.744L9.172 18.583a3.62 3.62 0 0 0 0 5.12l5.047 5.047-7.545 7.544c-1.36 1.36-1.56 3.598-.273 5.027a3.552 3.552 0 0 0 5.155.139l7.686-7.687 5.048 5.047a3.62 3.62 0 0 0 5.119 0L41.4 26.83ZM13.489 14.265l20.238 20.237"
-          className="c"
+          fill="currentColor"
+          fillRule="nonzero"
+          stroke="none"
+          d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10Zm0-1.5v-17a8.5 8.5 0 1 1 0 17Z"
         />
       </g>
     </svg>
@@ -162,7 +164,11 @@ export function EditSvg(props) {
   );
 }
 
-export function Spinner(props) {
+export function Spinner({
+  className,
+  innerColorClass = 'text-green-500',
+  ...props
+}) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -170,24 +176,33 @@ export function Spinner(props) {
       width={18}
       height={18}
       viewBox="0 0 24 24"
+      className={`${className} animate-spin`}
       {...props}
     >
-      <circle
-        cx={12}
-        cy={12}
-        r={10}
-        stroke="currentColor"
-        strokeWidth={4}
-        className="opacity-25"
-      />
+      <circle cx={12} cy={12} r={10} stroke="currentColor" strokeWidth={4} />
       <path
         fill="currentColor"
         d="M4 12a8 8 0 0 1 8-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 0 1 4 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-        style={{
-          opacity: '0.75',
-          color: 'green'
-        }}
+        className={`opacity-75 ${innerColorClass}`}
       />
+    </svg>
+  );
+}
+
+export function DeleteSvg({ ...props }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={24}
+      height={24}
+      fill="none"
+      stroke="red"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      {...props}
+    >
+      <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M10 11v6M14 11v6" />
     </svg>
   );
 }

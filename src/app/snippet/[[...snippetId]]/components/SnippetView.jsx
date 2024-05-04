@@ -1,11 +1,11 @@
 'use client';
 
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import SnippetHeader from './SnippetHeader';
 import CodeEditor from './CodeEditor';
 import TabSwitcher from './TabSwitcher';
-import { AuthContext } from '@/app/AuthContext';
 import Terminal from './Terminal';
+import WebPreview from './WebView';
 
 export default function SnippetView(props) {
   const [terminalView, setTerminalView] = useState(false);
@@ -13,9 +13,7 @@ export default function SnippetView(props) {
   const [snippet, setSnippet] = useState(props.snippet);
   const [fileIndex, setFileIndex] = useState(0);
   const [fileRenameStatus, setFileRenameStatus] = useState(false);
-
-  const [terminalData, setTerminalData] = useState('');
-  const [jobID, setJobID] = useState('');
+  const [executing, setExecStatus] = useState(false);
 
   const fileNameInput = (
     <input
@@ -29,7 +27,7 @@ export default function SnippetView(props) {
           title: target.value
         })
       }
-      className={`bg-transparent px-2`}
+      className={`bg-transparent px-2 max-w-[16ch]`}
       size={snippet.title.length - 5}
       autoFocus
       onBlur={() => setFileRenameStatus(false)}
@@ -39,7 +37,7 @@ export default function SnippetView(props) {
   const fileNameSpan = <span className="w-fit">{snippet.title}</span>;
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-1 lg:gap-4 w-full">
+    <div className="grid grid-cols-1 lg:grid-cols-2 w-full">
       <SnippetHeader
         snippet={snippet}
         setSnippet={setSnippet}
@@ -47,8 +45,13 @@ export default function SnippetView(props) {
         setFileIndex={setFileIndex}
         fileName={fileRenameStatus ? fileNameInput : fileNameSpan}
         setFileRenameStatus={setFileRenameStatus}
+        executing={executing}
+        terminalView={terminalView}
+        webView={webView}
+        setTerminalView={setTerminalView}
+        setWebView={setWebView}
       />
-      <div className="card my-2 p-2 hidden lg:block">Terminal</div>
+      <div className="card m-2 p-2 hidden lg:block">Terminal</div>
       <TabSwitcher
         terminalView={terminalView}
         setTerminalView={setTerminalView}
@@ -67,20 +70,11 @@ export default function SnippetView(props) {
       <div>
         <Terminal
           visibilityClass={`${terminalView ? '' : 'hidden'} ${!webView ? 'lg:block' : ''}`}
-          data={terminalData}
-          setData={setTerminalData}
-          jobID={jobID}
-          setJobID={setJobID}
+          executing={executing}
+          setExecStatus={setExecStatus}
         />
         {snippet.files.length === 3 && (
-          <div
-            className={`h-[80vh] card min-w-screen ${webView ? '' : 'hidden'} bg-[#fffffe] dark:bg-[#1e1e1e]`}
-          >
-            <iframe
-              src="https://tailwindcss.com/docs/grid-row"
-              frameBorder="0"
-            ></iframe>
-          </div>
+          <WebPreview viewClass={webView ? '' : 'hidden'} snippet={snippet} />
         )}
       </div>
     </div>

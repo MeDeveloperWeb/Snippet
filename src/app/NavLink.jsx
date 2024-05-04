@@ -15,7 +15,7 @@ import { AuthContext } from './AuthContext';
 import Link from 'next/link';
 
 export default function NavLink() {
-  const { theme, setTheme } = useTheme();
+  const { theme, setTheme, systemTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [{ username, access }, setUser] = useContext(AuthContext);
   useEffect(() => {
@@ -24,7 +24,9 @@ export default function NavLink() {
   }, [setUser]);
 
   function toggleTheme() {
-    if (theme === 'dark') setTheme('light');
+    const currTheme = theme === 'system' ? systemTheme : theme;
+
+    if (currTheme === 'dark') setTheme('light');
     else setTheme('dark');
   }
   return (
@@ -38,7 +40,8 @@ export default function NavLink() {
           >
             {!mounted ? (
               <ThemeLoader />
-            ) : theme === 'dark' ? (
+            ) : theme === 'dark' ||
+              (theme === 'system' && systemTheme === 'dark') ? (
               <SunSvg />
             ) : (
               <MoonSvg />
