@@ -43,19 +43,14 @@ export function handleLanguageChange(value, setSnippet, setFileIndex) {
 }
 
 export async function handleSaveSnippet(user, setUser, snippet) {
-  let res;
+  let res = await saveSnippet(snippet, user.access);
 
-  try {
-    res = await saveSnippet(snippet, user.access);
-    return res;
-  } catch (err) {
-    if (err.code === 401) {
-      const reValidatedUser = await getUserAuthDetails();
-      if (!reValidatedUser.access) throw Error('Unauthorized');
+  if (res.error && res.errorCode === 401) {
+    const reValidatedUser = await getUserAuthDetails();
+    if (reValidatedUser.access) {
       setUser(await getUserAuthDetails());
-
       res = await saveSnippet(snippet, reValidatedUser.access);
-      return res;
-    } else throw err;
+    }
   }
+  return res;
 }

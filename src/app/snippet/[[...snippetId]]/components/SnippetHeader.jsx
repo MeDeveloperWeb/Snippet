@@ -43,24 +43,10 @@ export default function SnippetHeader({
         autoClose: 1500
       });
     }
-    try {
-      const res = await handleSaveSnippet(user, setUser, mySnippet);
-      if (res.id) {
-        setSnippet({
-          ...mySnippet,
-          _id: res.id,
-          user: res.user
-        });
-        router.push(`/snippet/${res.id}`);
-      }
-      toast.update(toastId, {
-        render: res.message,
-        type: 'success',
-        autoClose: 1500,
-        isLoading: false
-      });
-    } catch (error) {
-      let { message } = error;
+    const res = await handleSaveSnippet(user, setUser, mySnippet);
+
+    if (res.error) {
+      let message = res.error;
       if (message.includes('Unauthorized')) {
         message = (
           <>
@@ -83,7 +69,23 @@ export default function SnippetHeader({
         autoClose: 3000,
         position: 'top-center'
       });
+      return;
     }
+
+    if (res.id) {
+      setSnippet({
+        ...mySnippet,
+        _id: res.id,
+        user: res.user
+      });
+      router.push(`/snippet/${res.id}`);
+    }
+    toast.update(toastId, {
+      render: res.message,
+      type: 'success',
+      autoClose: 1500,
+      isLoading: false
+    });
   };
 
   return (

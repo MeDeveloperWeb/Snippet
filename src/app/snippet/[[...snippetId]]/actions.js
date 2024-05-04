@@ -5,9 +5,10 @@ import { revalidatePath, revalidateTag } from 'next/cache';
 
 export default async function saveSnippet(snippet, access) {
   if (!access) {
-    const err = Error('Unauthorized');
-    err.code = 401;
-    throw err;
+    return {
+      error: 'Unauthorized',
+      errorCode: 401
+    };
   }
 
   let path = '/snippet/add';
@@ -30,10 +31,10 @@ export default async function saveSnippet(snippet, access) {
   const data = await response.json();
 
   if (!response.ok) {
-    console.log(data);
-    const err = Error(data.error);
-    err.code = response.status;
-    throw err;
+    return {
+      error: data.error,
+      errorCode: response.status
+    };
   }
 
   revalidatePath(`/snippet/${snippet._id || data.id}`);
