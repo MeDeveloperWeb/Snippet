@@ -2,6 +2,29 @@
 
 import { apiPath } from '@/app/Auth';
 import { revalidateTag } from 'next/cache';
+import { notFound } from 'next/navigation';
+
+export async function getUser(username, access) {
+  const response = await fetch(apiPath('/users'), {
+    method: 'POST',
+    headers: {
+      Accept: '*/*',
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${access}`
+    },
+    body: JSON.stringify({
+      username
+    })
+  });
+
+  if (!response.ok) {
+    return notFound();
+  }
+
+  const user = await response.json();
+
+  return user;
+}
 
 export default async function getUserSnippets(
   username,
@@ -26,6 +49,11 @@ export default async function getUserSnippets(
         cache: 'no-store'
       }
     );
+  }
+
+  if (!response.ok) {
+    if (response.status === 404) return notFound();
+    return [];
   }
 
   return await response.json();

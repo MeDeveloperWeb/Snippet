@@ -1,42 +1,70 @@
 'use client';
 
 import { Input, PasswordInput } from '@/ui/Form';
-import { apiPath } from '../Auth';
-import { useContext } from 'react';
-import { redirect } from 'next/navigation';
+import { useContext, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { AuthContext } from '../AuthContext';
+import { logUserIn } from '../actions';
+import { toast } from 'react-toastify';
 
-export default function Login() {
+export default function Login({ searchParams }) {
   const [user, setUser] = useContext(AuthContext);
-  // const query = useSearchParams().get('q') || '';
+  const query = searchParams?.q || '';
+  const router = useRouter();
 
-  const query = '';
+  useEffect(() => {
+    if (user.username) {
+      router.push(`/${query}`);
+    }
+  }, [query, router, user.username]);
 
-  if (user.access) {
-    redirect(`/${query}`);
+  if (user.username) {
+    return <h1>Already logged In</h1>;
   }
-
-  const loginUser = async (event) => {
-    event.preventDefault();
-
-    const bodyContent = new FormData(event.target.closest('form'));
-
-    const response = await fetch(apiPath('/users/login'), {
-      method: 'POST',
-      body: bodyContent,
-      credentials: 'include'
-    });
-
-    const data = await response.json();
-
-    setUser(data);
-  };
 
   return (
     <div className="flex items-center justify-center mt-20">
       <form
-        onSubmit={(event) => loginUser(event)}
+        // onSubmit={(event) => loginUser(event)}
+        action={async (formData) => {
+          const toastId = toast.loading('Logging User In...', {
+            position: 'top-center'
+          });
+
+          const user = await logUserIn(formData);
+
+          if (user.error) {
+            toast.update(toastId, {
+              render: user.error,
+              type: 'error',
+              isLoading: false,
+              autoClose: 3000,
+              draggable: true,
+              closeButton: true,
+              closeOnClick: true
+            });
+
+            return;
+          }
+          // update Notification
+          toast.update(toastId, {
+            render: `User Logged in as ${user.username} Successfully`,
+            type: 'success',
+            isLoading: false,
+            autoClose: 3000,
+            draggable: true,
+            closeButton: true,
+            closeOnClick: true
+          });
+
+          setUser({
+            access: user.access,
+            id: user.id,
+            username: user.username
+          });
+          router.push(`/${query}`);
+        }}
         className="flex flex-col gap-8 px-6 py-12 md:px-12 m-2 sm:m-0 card"
       >
         <h1 className="text-center text-3xl">Login to Snippett</h1>
@@ -47,7 +75,7 @@ export default function Login() {
           id="username"
           name="username"
         />
-        <PasswordInput />
+        <PasswordInput resetRequired={true} />
         <input
           type="submit"
           value="Log In"

@@ -2,8 +2,9 @@ import { runCode } from '../Terminal';
 import defaultProgram from '../data/defaultProgram';
 import { injectJSInWebPreview } from '../WebView';
 import languages from '../data/languageToExt';
-import { getUserAuthDetails } from '@/app/Auth';
+import { isRevalidationRequired } from '@/app/Auth';
 import saveSnippet from '../../actions';
+import { getRevalidatedUser, revalidateAuthentication } from '@/app/actions';
 
 export function runSnippet(content, language) {
   if (language === 'web') {
@@ -43,14 +44,29 @@ export function handleLanguageChange(value, setSnippet, setFileIndex) {
 }
 
 export async function handleSaveSnippet(user, setUser, snippet) {
-  let res = await saveSnippet(snippet, user.access);
-
-  if (res.error && res.errorCode === 401) {
-    const reValidatedUser = await getUserAuthDetails();
-    if (reValidatedUser.access) {
-      setUser(await getUserAuthDetails());
-      res = await saveSnippet(snippet, reValidatedUser.access);
-    }
+  if (!user.username || !user.id) {
+    return {
+      error: 'Unauthorized',
+      errorCode: 401
+    };
   }
+
+  let userData = user;
+
+  // If user doesn't have access or user access is expiring in less than 30 seconds
+  if (isRevalidationRequired(user.access)) {
+    userData = await getRevalidatedUser();
+
+    setUser({
+      access: userData.access,
+      username: userData.username,
+      id: userData.id
+    });
+
+    if (userData.error) return { error: userData.error };
+  }
+
+  const res = await saveSnippet(snippet, userData.access);
+
   return res;
 }

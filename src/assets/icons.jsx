@@ -154,7 +154,6 @@ export function EditSvg(props) {
       strokeLinecap="round"
       strokeLinejoin="round"
       strokeWidth={2}
-      className="feather feather-edit"
       viewBox="0 0 24 24"
       {...props}
     >

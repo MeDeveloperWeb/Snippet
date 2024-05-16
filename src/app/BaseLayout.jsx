@@ -6,11 +6,11 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import { useTheme } from 'next-themes';
 
-export default function BaseLayout({ children }) {
+export default function BaseLayout({ children, userData = {} }) {
   const [user, setUser] = useState({
-    username: undefined,
+    username: userData.username,
     access: undefined,
-    id: undefined
+    id: userData.sub
   });
   const { theme } = useTheme();
 
@@ -24,8 +24,11 @@ export default function BaseLayout({ children }) {
         theme={theme}
         position="bottom-left"
         limit={3}
-        closeOnClick
+        closeOnClick={true}
         autoClose={2000}
+        draggable={true}
+        closeButton={true}
+        draggablePercent={50}
       />
     </AuthContext.Provider>
   );

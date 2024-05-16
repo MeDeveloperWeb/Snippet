@@ -1,9 +1,10 @@
 'use server';
 
 import { apiPath } from '@/app/Auth';
-import { revalidatePath, revalidateTag } from 'next/cache';
+import { revalidatePath } from 'next/cache';
 
 export default async function saveSnippet(snippet, access) {
+  console.log('executing');
   if (!access) {
     return {
       error: 'Unauthorized',
@@ -27,6 +28,12 @@ export default async function saveSnippet(snippet, access) {
     body: bodyContent,
     headers: headersList
   });
+
+  if (response.status === 401) {
+    return {
+      error: 'Unauthorized'
+    };
+  }
 
   const data = await response.json();
 

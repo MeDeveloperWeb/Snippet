@@ -1,42 +1,72 @@
 'use client';
 
 import { Input, PasswordInput } from '@/ui/Form';
-import { apiPath } from '../Auth';
-import { useContext } from 'react';
-import { redirect } from 'next/navigation';
+import { useContext, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { AuthContext } from '../AuthContext';
+import { registerUser } from '../actions';
+import { useFormStatus } from 'react-dom';
+import { toast } from 'react-toastify';
 
-export default function Register() {
+export default function Register({ searchParams }) {
   const [user, setUser] = useContext(AuthContext);
-  // temporary
-  // const query = useSearchParams().get('q') || '';
+  const query = searchParams?.q || '';
+  const router = useRouter();
+  const { pending } = useFormStatus();
 
-  const query = '';
-  if (user.access) {
-    redirect(`/${query}`);
+  useEffect(() => {
+    if (user.username) {
+      router.push(`/${query}`);
+    }
+  }, [query, router, user.username]);
+
+  if (user.username) {
+    return <h1>Already Logged In.</h1>;
   }
-
-  const registerUser = async (event) => {
-    event.preventDefault();
-
-    const bodyContent = new FormData(event.target.closest('form'));
-
-    const response = await fetch(apiPath('/users/register'), {
-      method: 'POST',
-      body: bodyContent,
-      credentials: 'include'
-    });
-
-    const data = await response.json();
-
-    setUser(data);
-  };
 
   return (
     <div className="flex items-center justify-center mt-20">
       <form
-        onSubmit={(event) => registerUser(event)}
+        action={async (formData) => {
+          const toastId = toast.loading('Registering User...', {
+            position: 'top-center'
+          });
+
+          const user = await registerUser(formData);
+
+          if (user.error) {
+            toast.update(toastId, {
+              render: user.error,
+              type: 'error',
+              isLoading: false,
+              autoClose: 3000,
+              draggable: true,
+              closeButton: true,
+              closeOnClick: true
+            });
+
+            return;
+          }
+          // update Notification
+          toast.update(toastId, {
+            render: `User Registered as ${user.username} Successfully`,
+            type: 'success',
+            isLoading: false,
+            autoClose: 3000,
+            draggable: true,
+            closeButton: true,
+            closeOnClick: true
+          });
+
+          setUser({
+            access: user.access,
+            id: user.id,
+            username: user.username
+          });
+
+          router.push(`/${query}`);
+        }}
         className="flex flex-col gap-8 card px-6 py-12 md:px-12 m-2 sm:m-0"
       >
         <h1 className="text-center text-3xl">Create a new Account</h1>
@@ -59,6 +89,7 @@ export default function Register() {
           type="submit"
           value="Register"
           className="p-2 rounded bg-blue-400 text-slate-100 font-medium cursor-pointer"
+          disabled={pending}
         />
         <p className="text-center">
           Already have an Account?{' '}

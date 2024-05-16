@@ -35,7 +35,12 @@ export function useTerminal(username) {
         ) : (
           <span>{data}</span>
         )}
-        {newLine && initSpan}
+        {newLine && (
+          <>
+            {'\n'}
+            {initSpan}
+          </>
+        )}
       </>
     );
   };
