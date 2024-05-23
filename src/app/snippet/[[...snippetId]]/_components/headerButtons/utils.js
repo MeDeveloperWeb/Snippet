@@ -63,7 +63,7 @@ export async function handleSaveSnippet(user, setUser, snippet) {
       id: userData?.id || undefined
     });
 
-    if (userData.error) return { error: userData.error };
+    if (!userData || userData.error) return { error: userData.error };
   }
 
   const res = await saveSnippet(snippet, userData.access);
