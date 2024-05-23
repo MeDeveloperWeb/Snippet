@@ -13,18 +13,21 @@ function setRefreshCookie(value, maxAge) {
   });
 }
 
+export async function fetchInLoop(path = '', options = {}) {
+  while (true) {
+    try {
+      const response = await fetch(path, options);
+      return response;
+    } catch (error) {}
+  }
+}
+
 export async function registerUser(formData) {
-  const response = await fetch(apiPath('/users/register'), {
+  const response = await fetchInLoop(apiPath('/users/register'), {
     method: 'POST',
     body: formData,
     credentials: 'include'
   });
-
-  if (!response.ok)
-    return {
-      error: 'Something Went Wrong! Please try Again.'
-    };
-
   const data = await response.json();
 
   if (data.error) return data;
@@ -35,7 +38,7 @@ export async function registerUser(formData) {
 }
 
 export async function logUserIn(formData) {
-  const response = await fetch(apiPath('/users/login'), {
+  const response = await fetchInLoop(apiPath('/users/login'), {
     method: 'POST',
     body: formData,
     credentials: 'include'

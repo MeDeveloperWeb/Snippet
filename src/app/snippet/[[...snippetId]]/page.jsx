@@ -7,28 +7,62 @@ export default async function Snippet({ params, searchParams }) {
   const { snippetId } = params || { snippetId: '' };
   const { language } = searchParams;
 
-  let snippet = {
-    title: 'Untitled',
-    files: [
-      {
-        content: defaultProgram[language || supportedLanguages[0]](),
-        language: language || supportedLanguages[0]
-      }
-    ]
-  };
+  let snippet;
+  let snippetSet = false;
 
   if (snippetId) {
     try {
       const response = await fetch(apiPath(`/snippet/get/${snippetId}`));
-      // {
-      //   next: {
-      //     tags: [`snippet-${snippetId}`]
-      //   }
-      // }
 
-      if (response.ok) snippet = await response.json();
+      if (response.ok) {
+        snippet = await response.json();
+        snippetSet = true;
+      }
     } catch (err) {
       console.log(err);
+    }
+  }
+
+  if (!snippetSet) {
+    if (language === 'web') {
+      const content = defaultProgram.web();
+      snippet = {
+        title: 'Untitled',
+        files: [
+          {
+            content: content.html,
+            language: 'html'
+          },
+          {
+            content: content.css,
+            language: 'css'
+          },
+          {
+            content: content.js,
+            language: 'javascript'
+          }
+        ]
+      };
+    } else if (supportedLanguages.includes(snippetId)) {
+      snippet = {
+        title: 'Untitled',
+        files: [
+          {
+            content: defaultProgram[language](),
+            language: language
+          }
+        ]
+      };
+    } else {
+      snippet = {
+        title: 'Untitled',
+        files: [
+          {
+            content: defaultProgram[supportedLanguages[0]](),
+            language: supportedLanguages[0]
+          }
+        ]
+      };
     }
   }
 
