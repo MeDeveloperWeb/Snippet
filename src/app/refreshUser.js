@@ -1,6 +1,7 @@
 'use server';
 
 import { apiPath } from './Auth';
+import { fetchInLoop } from './actions';
 
 export async function fetchUserFromRefresh(refresh) {
   if (!refresh)
@@ -8,7 +9,7 @@ export async function fetchUserFromRefresh(refresh) {
       error: 'Unauthorized'
     };
 
-  const response = await fetch(apiPath('/users/token/refresh/'), {
+  const response = await fetchInLoop(apiPath('/users/token/refresh/'), {
     method: 'POST',
     body: JSON.stringify({
       refresh
