@@ -1,7 +1,7 @@
 import { apiPath } from '@/app/Auth';
-import supportedLanguages from './components/data/languages';
-import SnippetView from './components/SnippetView';
-import defaultProgram from './components/data/defaultProgram';
+import supportedLanguages from './_components/data/languages';
+import SnippetView from './_components/SnippetView';
+import defaultProgram from './_components/data/defaultProgram';
 
 export default async function Snippet({ params, searchParams }) {
   const { snippetId } = params || { snippetId: '' };
