@@ -58,9 +58,9 @@ export async function handleSaveSnippet(user, setUser, snippet) {
     userData = await getRevalidatedUser();
 
     setUser({
-      access: userData.access,
-      username: userData.username,
-      id: userData.id
+      access: userData?.access || undefined,
+      username: userData?.username || undefined,
+      id: userData?.id || undefined
     });
 
     if (userData.error) return { error: userData.error };
