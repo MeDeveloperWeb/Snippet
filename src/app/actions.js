@@ -46,11 +46,6 @@ export async function logUserIn(formData) {
 
   const data = await response.json();
 
-  if (!response.ok)
-    return {
-      error: 'Something Went Wrong! Please try Again.'
-    };
-
   if (data.error) return data;
 
   setRefreshCookie(data.refresh, data.refreshMaxAge);
