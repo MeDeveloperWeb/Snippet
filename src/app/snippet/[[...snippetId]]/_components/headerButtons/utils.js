@@ -57,15 +57,20 @@ export async function handleSaveSnippet(user, setUser, snippet) {
   if (isRevalidationRequired(user.access)) {
     userData = await getRevalidatedUser();
 
+    if (!userData)
+      return {
+        error: 'Something Went Wrong! Please try again!'
+      };
+
     setUser({
-      access: userData?.access || undefined,
-      username: userData?.username || undefined,
-      id: userData?.id || undefined
+      access: userData.access,
+      username: userData.username,
+      id: userData.id
     });
 
-    if (!userData || userData.error)
+    if (userData.error)
       return {
-        error: userData?.error || 'Something Went Wrong! Please try again!'
+        error: userData.error
       };
   }
 
