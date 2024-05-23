@@ -43,7 +43,7 @@ export default async function Snippet({ params, searchParams }) {
           }
         ]
       };
-    } else if (supportedLanguages.includes(snippetId)) {
+    } else if (supportedLanguages.includes(language)) {
       snippet = {
         title: 'Untitled',
         files: [
