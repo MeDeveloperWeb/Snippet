@@ -1,10 +1,10 @@
-import { Inter } from 'next/font/google';
+import { Inconsolata } from 'next/font/google';
 import './globals.css';
 import { ThemeProvider } from 'next-themes';
 import BaseLayout from './BaseLayout';
 import { getUnverifiedUserDetails } from './actions';
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Inconsolata({ subsets: ['latin'], weight: '400' });
 
 export const metadata = {
   title: 'Snippett',
@@ -12,9 +12,6 @@ export const metadata = {
 };
 
 export default async function RootLayout({ children }) {
-  // waking the server up
-  fetch(process.env.CODE_EXECUTION_URL + '/list');
-
   const userData = await getUnverifiedUserDetails();
 
   return (

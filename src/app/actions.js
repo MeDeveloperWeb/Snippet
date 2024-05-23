@@ -2,6 +2,7 @@
 
 import { cookies } from 'next/headers';
 import { apiPath, parseJwt } from './Auth';
+import { fetchUserFromRefresh } from './refreshUser';
 
 function setRefreshCookie(value, maxAge) {
   cookies().set('refresh', value, {
@@ -71,18 +72,7 @@ export async function refreshToken() {
       error: 'Unauthorized'
     };
 
-  const response = await fetch(apiPath('/users/token/refresh/'), {
-    method: 'POST',
-    body: JSON.stringify({
-      refresh
-    }),
-    headers: {
-      Accept: '*/*',
-      'Content-Type': 'application/json'
-    }
-  });
-
-  const data = await response.json();
+  const data = await fetchUserFromRefresh(refresh);
 
   if (data.error) cookies().delete('refresh');
 

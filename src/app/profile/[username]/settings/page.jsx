@@ -1,9 +1,10 @@
-import { getRevalidatedUser } from '@/app/actions';
 import Link from 'next/link';
 import { getUser } from '../actions';
 import InputField from './InputField';
 import { changeEmail, reqPasswordChange, reqVerification } from './actions';
 import Button from './Button';
+import { cookies } from 'next/headers';
+import { fetchUserFromRefresh } from '@/app/refreshUser';
 
 export default async function Settings({ params }) {
   const { username } = params;
@@ -17,7 +18,11 @@ export default async function Settings({ params }) {
       as {username} to proceed.
     </h1>
   );
-  const currentUser = await getRevalidatedUser();
+  const currentUser = fetchUserFromRefresh(cookies().get('refresh'));
+
+  if (currentUser.error) {
+    cookies().delete('refresh');
+  }
 
   if (!currentUser) {
     return <h1>Loading...</h1>;

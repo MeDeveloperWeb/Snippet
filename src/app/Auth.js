@@ -1,6 +1,4 @@
-import { refreshToken } from './actions';
-
-export function apiPath(route) {
+export function apiPath(route = '') {
   return process.env.NEXT_PUBLIC_API_URL + route;
 }
 

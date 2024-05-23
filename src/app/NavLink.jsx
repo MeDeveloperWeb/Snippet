@@ -14,14 +14,19 @@ import { AuthContext } from './AuthContext';
 import Link from 'next/link';
 import { logUserOut } from './actions';
 import { toast } from 'react-toastify';
+import pingServer from './pingServer';
 
-export default function NavLink({ user }) {
+export default function NavLink() {
   const { theme, setTheme, systemTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [{ username }, setUser] = useContext(AuthContext);
   const dialogRef = useRef(null);
 
-  useEffect(() => setMounted(true), []);
+  useEffect(() => {
+    // Ping the server as soon as nav loads
+    pingServer();
+    setMounted(true);
+  }, []);
 
   function toggleTheme() {
     const currTheme = theme === 'system' ? systemTheme : theme;
