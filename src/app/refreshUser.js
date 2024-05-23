@@ -18,6 +18,11 @@ export async function fetchUserFromRefresh(refresh) {
       'Content-Type': 'application/json'
     }
   });
+
+  if (!response.ok)
+    return {
+      error: 'Something Went Wrong! Please try Again.'
+    };
   const data = await response.json();
   return data;
 }

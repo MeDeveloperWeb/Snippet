@@ -20,6 +20,11 @@ export async function registerUser(formData) {
     credentials: 'include'
   });
 
+  if (!response.ok)
+    return {
+      error: 'Something Went Wrong! Please try Again.'
+    };
+
   const data = await response.json();
 
   if (data.error) return data;
@@ -37,6 +42,11 @@ export async function logUserIn(formData) {
   });
 
   const data = await response.json();
+
+  if (!response.ok)
+    return {
+      error: 'Something Went Wrong! Please try Again.'
+    };
 
   if (data.error) return data;
 

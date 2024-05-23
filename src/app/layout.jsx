@@ -1,10 +1,10 @@
-import { Inconsolata } from 'next/font/google';
+import { Inter } from 'next/font/google';
 import './globals.css';
 import { ThemeProvider } from 'next-themes';
 import BaseLayout from './BaseLayout';
 import { getUnverifiedUserDetails } from './actions';
 
-const inter = Inconsolata({ subsets: ['latin'], weight: '400' });
+const inter = Inter({ subsets: ['latin'], weight: '400' });
 
 export const metadata = {
   title: 'Snippett',

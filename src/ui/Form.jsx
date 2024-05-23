@@ -1,6 +1,14 @@
 import Link from 'next/link';
 
-export function Input({ type, label, placeholder, name, id = name, ...props }) {
+export function Input({
+  type,
+  label,
+  placeholder,
+  name,
+  id = name,
+  inputRef,
+  ...props
+}) {
   return (
     <div className="flex flex-col space-y-2">
       <label htmlFor={id}>{label}</label>
@@ -12,6 +20,8 @@ export function Input({ type, label, placeholder, name, id = name, ...props }) {
         placeholder={placeholder}
         autoComplete="on"
         required
+        ref={inputRef}
+        {...props}
       />
     </div>
   );
@@ -22,7 +32,7 @@ export function PasswordInput({
   name = 'password',
   id = name,
   resetRequired = false,
-  resetLink = '/forgot-password',
+  resetLink = 'auth-actions/forgot-password',
   resetTitle = 'Forgot Password?'
 }) {
   return (

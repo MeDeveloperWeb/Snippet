@@ -3,8 +3,10 @@
 import { apiPath } from './Auth';
 
 export default async function pingServer() {
-  timeoutPromise(100, fetch(apiPath()));
-  timeoutPromise(100, fetch(process.env.CODE_EXECUTION_URL + '/list'));
+  try {
+    timeoutPromise(500, fetch(apiPath()));
+    timeoutPromise(500, fetch(process.env.CODE_EXECUTION_URL + '/list'));
+  } catch (err) {}
 }
 
 // https://github.com/JakeChampion/fetch/issues/175#issuecomment-216791333
